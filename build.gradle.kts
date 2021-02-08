@@ -41,5 +41,7 @@ tasks {
 
     withType<Test> {
         useJUnitPlatform()
+        val output = sourceSets.test.get().java.outputDir
+        systemProperty("test.home", output)
     }
 }
