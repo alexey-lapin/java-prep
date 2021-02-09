@@ -1,6 +1,7 @@
 plugins {
     java
     `java-test-fixtures`
+    id("com.github.ben-manes.versions")
 }
 
 repositories {
@@ -25,11 +26,11 @@ sourceSets {
 
 dependencies {
     testFixturesApi("org.jooq:joor-java-8:0.9.13")
-    testFixturesApi("org.assertj:assertj-core:3.18.1")
+    testFixturesApi("org.assertj:assertj-core:3.19.0")
 
-    testImplementation("org.mockito:mockito-core:3.7.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.2")
+    testImplementation("org.mockito:mockito-core:3.7.7")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 tasks {
@@ -43,5 +44,21 @@ tasks {
         useJUnitPlatform()
         val output = sourceSets.test.get().java.outputDir
         systemProperty("test.home", output)
+    }
+
+    dependencyUpdates {
+        checkConstraints = true
+        resolutionStrategy {
+            componentSelection {
+                all {
+                    val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "b", "ea")
+                        .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-+]*") }
+                        .any { it.matches(candidate.version) }
+                    if (rejected) {
+                        reject("Release candidate")
+                    }
+                }
+            }
+        }
     }
 }
