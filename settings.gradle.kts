@@ -4,4 +4,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "java-prep"
+rootProject.name = "java-prep-8-oca"
